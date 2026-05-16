@@ -30,19 +30,6 @@ Normalize cue data
 Return parsed results to frontend
 ↓
 Display cue information in UI
-Project Structure
-cue-bridge/
-├── backend/
-│ ├── app/
-│ │ ├── main.py
-│ │ └── parsers/
-│ │ └── rekordbox_parser.py
-│ └── requirements.txt
-│
-└── frontend/
-├── src/
-├── package.json
-└── vite.config.ts
 
 Next Steps
 Frontend Integration
