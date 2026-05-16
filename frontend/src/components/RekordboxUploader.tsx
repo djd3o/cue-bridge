@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { uploadRekordboxXml } from "../services/rekordboxApi";
 import type { Track } from "../types/cue";
+import TrackTable from "./TrackTable";
 
 export default function RekordboxUploader() {
   const [file, setFile] = useState<File | null>(null);
@@ -38,11 +39,7 @@ export default function RekordboxUploader() {
         {loading ? "Uploading..." : "Upload XML"}
       </button>
 
-      {tracks.map((track, index) => (
-        <div key={index}>
-          {track.trackTitle} — {track.artist}
-        </div>
-      ))}
+      {tracks.length > 0 && <TrackTable tracks={tracks} />}
     </div>
   );
 }
