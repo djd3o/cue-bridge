@@ -8,8 +8,9 @@ export default function RekordboxUploader() {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploadSummary, setUploadSummary] = useState<string | null>(null);
-
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showOnlyWithCues, setShowOnlyWithCues] = useState(false);
 
   const uploadFile = async () => {
     if (!file) return;
@@ -50,6 +51,16 @@ export default function RekordboxUploader() {
       setFile(droppedFile);
     }
   };
+
+  const filteredTracks = tracks.filter((track) => {
+    const matchesSearch = `${track.trackTitle} ${track.artist}`
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    const matchesCueFilter = showOnlyWithCues ? track.cues.length > 0 : true;
+
+    return matchesSearch && matchesCueFilter;
+  });
 
   return (
     <div
@@ -93,7 +104,38 @@ export default function RekordboxUploader() {
         {file && <p>Selected: {file.name}</p>}
       </div>
       {uploadSummary && <p style={{ color: "lightgreen" }}>{uploadSummary}</p>}
-      {tracks.length > 0 && <TrackTable tracks={tracks} />}
+
+      <input
+        type="text"
+        placeholder="Search tracks..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        style={{
+          marginTop: "2rem",
+          width: "100%",
+          padding: "0.75rem",
+          borderRadius: "8px",
+          border: "1px solid #333",
+          background: "#14151a",
+          color: "white",
+        }}
+      />
+      <label style={{ display: "block", marginTop: "1rem" }}>
+        <input
+          type="checkbox"
+          checked={showOnlyWithCues}
+          onChange={(e) => setShowOnlyWithCues(e.target.checked)}
+        />{" "}
+        Show only tracks with cues
+      </label>
+
+      {tracks.length > 0 && (
+        <p style={{ marginTop: "1rem", color: "#aaa" }}>
+          Showing {filteredTracks.length} of {tracks.length} tracks
+        </p>
+      )}
+
+      {tracks.length > 0 && <TrackTable tracks={filteredTracks} />}
     </div>
   );
 }
