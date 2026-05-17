@@ -22,5 +22,5 @@ async def upload_rekordbox(file: UploadFile = File(...)):
     return {
         "filename": file.filename,
         "tracksFound": len(parsed_tracks),
-        "tracks": parsed_tracks[:5],
+        "tracks": parsed_tracks[:100],
     }
