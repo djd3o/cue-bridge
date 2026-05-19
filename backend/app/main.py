@@ -24,3 +24,11 @@ async def upload_rekordbox(file: UploadFile = File(...)):
         "tracksFound": len(parsed_tracks),
         "tracks": parsed_tracks[:100],
     }
+
+@app.post("/upload/serato")
+async def upload_serato(file: UploadFile = File(...)):
+    contents = await file.read()
+
+    parsed_data = parse_serato_metadata(contents)
+
+    return parsed_data

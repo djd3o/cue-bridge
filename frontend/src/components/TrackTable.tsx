@@ -61,7 +61,7 @@ export default function TrackTable({ tracks }: Props) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "80px 1fr 160px 80px",
+          gridTemplateColumns: "60px 1.5fr 1fr 90px 2fr",
           padding: "0.75rem 1rem",
           background: "#0f1014",
           color: "#aaa",
@@ -84,6 +84,8 @@ export default function TrackTable({ tracks }: Props) {
         >
           Cues {sortBy === "cueCount" ? "▲" : ""}
         </div>
+
+        <div>Cue Times</div>
       </div>
 
       {sortedTracks.map((track, index) => {
@@ -95,7 +97,7 @@ export default function TrackTable({ tracks }: Props) {
             onClick={() => setSelectedIndex(index)}
             style={{
               display: "grid",
-              gridTemplateColumns: "80px 1fr 160px 80px",
+              gridTemplateColumns: "60px 1.5fr 1fr 90px 2fr",
               alignItems: "center",
               gap: "1rem",
               padding: "0.75rem 1rem",
@@ -106,13 +108,63 @@ export default function TrackTable({ tracks }: Props) {
           >
             <div style={{ color: "#888" }}>|||</div>
 
-            <strong>{track.trackTitle}</strong>
+            <div
+              style={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                minWidth: 0,
+              }}
+            >
+              {track.trackTitle}
+            </div>
 
-            <div style={{ color: "#999", fontSize: "0.85rem" }}>
+            <div
+              style={{
+                color: "#999",
+                fontSize: "0.85rem",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                minWidth: 0,
+              }}
+            >
               {track.artist || "Unknown Artist"}
             </div>
 
             <div style={{ color: "#aaa" }}>{track.cues.length}</div>
+
+            <div
+              style={{
+                color: "#bbb",
+                fontSize: "0.8rem",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {track.cues.length > 0
+                ? track.cues
+                    .map((cue) => {
+                      const rawTime = cue.timeMs;
+
+                      if (
+                        typeof rawTime !== "number" ||
+                        Number.isNaN(rawTime)
+                      ) {
+                        return "--:--";
+                      }
+
+                      const minutes = Math.floor(rawTime / 60000);
+                      const seconds = Math.floor((rawTime % 60000) / 1000);
+
+                      return `${minutes.toString().padStart(2, "0")}:${seconds
+                        .toString()
+                        .padStart(2, "0")}`;
+                    })
+                    .join(" • ")
+                : "No cues"}
+            </div>
           </div>
         );
       })}
